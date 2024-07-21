@@ -1,4 +1,5 @@
 import React, { ComponentProps } from "react";
+import './Button.css'
 
 export type ButtonProps = ComponentProps<'button'> & {}
 
