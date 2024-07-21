@@ -4,7 +4,10 @@ import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
 import postcss from 'rollup-plugin-postcss';
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import external from 'rollup-plugin-peer-deps-external';
+import tailwindcss from 'tailwindcss';
+import tailwindConfig from './tailwind.config.mjs';
+
 import packageJson from "./package.json" assert { type: "json" };
 
 export default [
@@ -23,11 +26,21 @@ export default [
             },
         ],
         plugins: [
-            peerDepsExternal(),
+            external(),
             resolve(), 
             commonjs(), 
             typescript({ tsconfig: './tsconfig.json' }),
-            postcss(),
+            postcss({ 
+                config: { 
+                    path: './postcss.config.mjs',
+                },
+                extensions: ['.css'],
+                minimize: true,
+                inject: {
+                    insertAt: 'top',
+                },
+                plugins: [tailwindcss(tailwindConfig)],
+            }),
             terser(),
         ],
         external: ['react-dom']
